@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- basic -->
+    <%- include('__externallink.ejs')%>
+</head>
+<style>
+    #product:hover {
+        transform: translateY(-.9rem);
+        transition: .4s;
+
+    }
+</style>
+
+<body>
+
+    <!-- banner bg main start -->
+
+
+
+    <!-- header top section start -->
+    <%- include('__header1.ejs')%>
+        <%- include('__header.ejs')%>
+            <!-- header section end -->
+
+            <!-- banner section end -->
+
+
+            <!-- banner bg main end -->
+            <div class="container mb-5">
+                <div class="text-center  mt-4">
+                    <!-- <marquee> -->
+                    <h1>
+                        Featured Products</h1>
+                </div>
+                <hr style="border: 3px solid goldenrod;">
+                <!-- </marquee> -->
+            </div><br>
+
+
+            <!-- fashion section start -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2" style="background-color:goldenrod;height:230vh;position:sticky;">
+                        <%categoryList.map((category,index)=>{%>
+                            <button class="btn btn-outline-warning btn-sm"><a
+                                    href="/product/<%=category.categoryName%>">
+                                    <li class="font-weight-bold ml-1 p-1 text-white">
+                                        <%=category.categoryName.toUpperCase()%>>
+                                    </li>
+                                </a></button>
+                            <hr />
+                            <%})%>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="row" id="product-display">
+                            <%productList.map((product,index)=>{%>
+                                <div style="height: 450px;" class="col-md-3 p-3" id="product">
+                                    <div style=" border:1px solid gray;border-radius: 2%;box-shadow: 2px 3px 3px;">
+                                        <img src="<%=product.thumbnail%>"
+                                            style="width:90%; height: 140px;margin-top: 15px;box-shadow: 7px 7px 7px;margin-left: 9px;">
+                                        <h4 class="text-center mt-2">
+                                            <%=product.title.substring(0,20)%>
+                                        </h4>
+                                        <p class="text-center mt-1">Price : <%if(product.discountPercentage){%>
+                                                <del class="text-danger">
+                                                    <%=product.price%>
+                                                </del>
+                                                <span
+                                                    class="text-success"><%=Math.round(product.price-((product.price*product.discountPercentage)
+                                                        /100))%>Rs.</span>
+                                                <%}else{%>
+                                                    <span class="text-success">
+                                                        <%=product.price%> Rs.
+                                                    </span>
+                                                    <%}%>
+                                        </p>
+                                        <p class="text-center mt-1">
+                                            <%=product.description.substring(0,20)%>.....<a
+                                                    href="/product/view/<%=product.id%>">View More</a>
+                                        </p>
+                                        <div class="text-center">
+                                            <%if(currentUser){%>
+                                                <a
+                                                    onclick="addInToCart('<%=currentUser.id*1+1543%>','<%=product.id*1 + 2567%>')">
+                                                    <button style="width:80%;" class="btn btn-outline-warning mb-3">Add
+                                                        To
+                                                        Cart</button>
+                                                </a>
+                                                <%}else{%>
+                                                    <a href="/cart/add-to-cart/''/''">
+                                                        <button style="width:80%;"
+                                                            class="btn btn-outline-warning mb-3">Add To
+                                                            Cart</button>
+                                                    </a>
+                                                    <%}%>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%})%>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <%- include('__footer.ejs')%>
+                    <!-- footer section end -->
+                    <!-- copyright section start -->
+                    <div class="copyright_section">
+                        <div class="container">
+                            <p class="copyright_text">© 2020 All Rights Reserved. Design by <a
+                                    href="https://html.design">Free
+                                    html
+                                    Templates</a></p>
+                        </div>
+                    </div>
+                    <!-- copyright section end -->
+                    <!-- Javascript files-->
+                    <% - include('__externalscriptlink.ejs') %>
+                        <script>
+                            function addInToCart(userId, productId) {
+                                var xhttp = new XMLHttpRequest();
+                                xhttp.open("GET", "/cart/add-to-cart/" + userId + "/" + productId, true);
+                                xhttp.send();
+                                xhttp.onreadystatechange = function () {
+                                    if (xhttp.readyState == 4) {
+                                        let data = JSON.parse(xhttp.responseText);
+                                        window.alert(data.message);
+                                    }
+                                }
+                            }
+
+                        </script>
+</body>
+
+</html>

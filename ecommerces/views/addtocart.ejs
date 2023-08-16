@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>cart</title>
+    <%- include('__externallink.ejs')%>
+        <% - include('__externalscriptlink.ejs') %>
+</head>
+
+<body>
+    <script>
+        function loadCardItems(userId) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("Get", "/cart/load-cart", true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4) {
+                    let data = JSON.parse(xhttp.responseText);
+                    let TotalBillAmount = 0;
+                    data = data.map((item, index) => {
+                        item.qty = 1;
+                        TotalBillAmount += item.price;
+                        return item;
+                    });
+                    document.getElementById("totalBillAmount").innerHTML = "" + TotalBillAmount;
+                    localStorage.setItem("cart-items", JSON.stringify(data))
+                }
+            }
+        }
+        function changeQty(index) {
+            let updateQty = document.getElementById("qty" + index).value;
+            let priceObject = document.getElementById("price" + index);
+            let TotalBillAmountObject = document.getElementById("totalBillAmount");
+            let data = localStorage.getItem("cart-items");
+            data = JSON.parse(data);
+            data[index].qty = updateQty;
+            let updatedPrice = updateQty * data[index].price;
+            priceObject.innerHTML = "" + updatedPrice;
+            let amount = 0;
+            data.map((item, index) => {
+                amount = amount + item.price * item.qty;
+            });
+            TotalBillAmountObject.innerHTML = "" + amount;
+            localStorage.setItem("cart-items", JSON.stringify(data));
+
+        }
+        function getDataFromStorage() {
+            let hiddenField = document.getElementById("cart");
+            hiddenField.value = localStorage.getItem("cart-items");
+        }
+        loadCardItems();
+    </script>
+    <!-- <div class="banner_bg_main"> -->
+    <!-- header top section start -->
+    <%- include('__header1.ejs')%>
+        <!-- <div class="breadcrumbs"> -->
+        <!-- <div class="container"> -->
+        <!-- <div class="row"> -->
+        <!-- <div class="col-12"> -->
+        <!-- <div class="bread-inner"> -->
+        <!-- <ul class="bread-list d-flex"> -->
+        <!-- <li><a href="/">Home -></a> -->
+        <!-- </li> -->
+
+        <!-- <li class="active"><a href="/cart/view-cart">Cart</a></li> -->
+        <!-- </ul> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+
+
+
+        </div><br><br><br>
+        <!-- banner bg main end -->
+        <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+            <div class="col-lg-7" style="box-shadow: 3px 5px 5px 3px;margin-left: 4vw;margin-bottom: 5vh;">
+
+
+                <table class="table table-inverse table-responsive table-hover ">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Product</th>
+                            <th>ProductName</th>
+                            <th>Brand</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        <%cartItems.map((product,index)=>{%>
+                            <tr>
+                                <td scope="row">
+                                    <%=index+1%>
+                                </td>
+                                <td>
+                                    <img src="<%=product.thumbnail%>" style="width: 10vh;height: 10vh;" alt="">
+                                </td>
+                                <td>
+                                    <%=product.title%>
+                                </td>
+
+
+                                <td>
+                                    <%=product.brand%>
+                                </td>
+                                <td style="width: 150px;">
+                                    <input onchange="changeQty('<%=index%>')" type="number" name="" id="qty<%=index%>"
+                                        class="form-control" value="1" min="1" max="<%=product.stock%>"
+                                        required="required" style="width: 50%;">
+                                </td>
+                                <td id="price<%=index%>">
+                                    <%=product.price%>
+                                </td>
+                                <td><a href="/cart/delete/<%=product.id%>"><button
+                                            class="btn btn-outline-danger">Remove</button></a></td>
+                            </tr>
+                            <%})%>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="col-md-1"></div> -->
+
+            <div class="col-lg-3 col-md-3"
+                style="box-shadow: 3px 5px 5px 3px;margin-left:6vw;height: 280px;margin-bottom: 5vh;">
+                <h2>Order Summery</h2>
+                <hr style="border: 2px solid gray;">
+                <table>
+                    <tr>
+                        <td>
+                            <h3 style="color: gray;">Total Items : </h3>
+                        </td>
+                        <td>
+                            <h3 style="color: gray;">
+                                <%=cartItems.length%>
+                            </h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h3 style="color: gray;">TotalBillAmount : </h3>
+                        </td>
+                        <td>
+                            <h3 style="color: gray;" id="totalBillAmount"></h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h3 style="color: gray;">Shipping Charge : </h3>
+                        </td>
+                        <td>
+                            <h3 style="color: gray;">Free</h3>
+                        </td>
+                    </tr>
+
+                </table>
+                <button onclick="getDataFromStorage()" data-toggle="modal" data-target="#myModal" class="btn btn-dark"
+                    style="width:100%;margin-top: 3vh;" class="btn btn-outline mb-3">CheckOut</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/order/save" method="post">
+                        <!-- Modal Header -->
+                        <input type="hidden" name="cartItems" id="cart" />
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Enter delivery details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Contact person name</label>
+                                <input type="text" name="contactPerson" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Contact number</label>
+                                <input type="text" name="contactNumber" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Delivery address</label>
+                                <textarea class="form-control" name="deliveryAddress"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" onclick="return alert('Order placed succesfully')"
+                                class="btn btn-primary">Place Order</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <%- include('__footer.ejs')%>
+</body>
+
+</html>
+<!-- Button trigger modal -->
+
+<!-- Modal -->

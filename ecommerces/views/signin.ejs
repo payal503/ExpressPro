@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+
+    <%- include('__externallink.ejs')%>
+        <style>
+            /* .login {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 10px 10px 10px #eed0d0;
+
+            } */
+
+            html {
+                height: 100%;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: sans-serif;
+                background: linear-gradient(#e5e8ed, #bad1ea);
+            }
+
+            .login-box {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 400px;
+                padding: 40px;
+                transform: translate(-50%, -50%);
+                background: rgb(112, 111, 111);
+                box-sizing: border-box;
+                box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+                border-radius: 10px;
+            }
+
+            .login-box h2 {
+                margin: 0 0 30px;
+                padding: 0;
+                color: #fff;
+                text-align: center;
+            }
+
+            .login-box .user-box {
+                position: relative;
+            }
+
+            .login-box .user-box input {
+                width: 100%;
+                padding: 10px 0;
+                font-size: 16px;
+                color: #fff;
+                margin-bottom: 30px;
+                border: none;
+                border-bottom: 1px solid #fff;
+                outline: none;
+                background: transparent;
+            }
+
+            .login-box .user-box label {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px 0;
+                font-size: 16px;
+                color: #fff;
+                pointer-events: none;
+                transition: .5s;
+            }
+
+            .login-box .user-box input:focus~label,
+            .login-box .user-box input:valid~label {
+                top: -20px;
+                left: 0;
+                color: goldenrod;
+                font-size: 12px;
+            }
+
+            .login-box form button {
+                position: relative;
+                display: inline-block;
+                padding: 10px 20px;
+                color: #0b1415;
+                font-size: 16px;
+                text-decoration: none;
+                text-transform: uppercase;
+                overflow: hidden;
+                transition: .5s;
+                margin-top: 40px;
+                letter-spacing: 4px
+            }
+
+            .login-box button:hover {
+                background-color: goldenrod;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class=" row">
+            <div class="login-box col-md-4 col-lg-4">
+                <h2>Login</h2>
+                <form method="post" action="/signin">
+                    <!-- <div>
+                                <h2>Login Form</h2>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" class="form-control"
+                                    placeholder="Enter password">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">SignIn</button>
+
+                            </div> -->
+                    <div class="user-box">
+                        <input type="email" onkeyup="emailValidation()" id="email" name="email" required="">
+                        <span id="emailside" style="color:rgb(246, 77, 77)">*</span>
+                        <label>Email</label>
+
+                    </div>
+                    <div class="user-box">
+                        <input type="password" onkeyup="pswdValidation()" name="password" id="pid" required="">
+                        <span id="pswdside" style="color:rgb(246, 77, 77)">*</span>
+                        <label>Password</label>
+                    </div>
+                    <div style="margin-top: -10px;text-align: right;"><a href="/signUp">New User ?</a></div>
+                    <button type="submit" style="border-radius: 5%; border: none;">SignIn</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function emailValidation() {
+            var status = true;
+            var email = document.getElementById("email").value;
+            var emailside = document.getElementById("emailside");
+            email = email.trim();
+            if (email.length == 0) {
+                status = false;
+                emailside.innerHTML = "email is required";
+                // emailside.style.color = "red";
+            }
+            else {
+                var atTheRateIndex = email.indexOf('@');
+                var secondAtTheReateIndex = email.lastIndexOf('@');
+                var dotIndex = email.indexOf('.');
+                if (atTheRateIndex == -1) {
+                    status = false;
+                    emailside.innerHTML = "Invalid email(@ missing)";
+                    // emailside.style.color = "red";
+                }
+                else if (secondAtTheReateIndex != atTheRateIndex) {
+                    status = false;
+                    emailside.innerHTML = "Invalid email";
+                    // emailside.style.color = "red";
+                }
+                else if (dotIndex == -1) {
+                    status = false;
+                    emailside.innerHTML = "Invalid email(. missing)";
+                    // emailside.style.color = "red";
+                }
+                else {
+                    var stringAfterAtTheRate = email.substring(atTheRateIndex);
+                    var lastDotIndex = stringAfterAtTheRate.indexOf(".");
+                    if (lastDotIndex == -1) {
+                        status = false;
+                        emailside.innerHTML = "Invalid email(. missing in domain)";
+                        // emailside.style.color = "red";
+                    }
+                    else {
+                        var inOrCom = stringAfterAtTheRate.substring(lastDotIndex + 1);
+                        if (inOrCom.length < 2) {
+                            status = false;
+                            emailside.innerHTML = "Invalid email";
+                            // emailside.style.color = "red";
+                        }
+                        else {
+
+                            if (stringAfterAtTheRate.substring(1, lastDotIndex).length == 0) {
+                                status = false;
+                                emailside.innerHTML = "Invalid Email";
+                                // emailside.style.color = "red";
+                            }
+                            else
+                                emailside.innerHTML = "";
+                        }
+                    }
+                }
+            }
+            return status;
+        }
+        // -------------------------------------------------------------------
+        function pswdValidation() {
+            var status = true;
+            var password = document.getElementById("pid").value;
+            var pswdside = document.getElementById("pswdside");
+            if (password.length == 0) {
+                status = false;
+                pswdside.innerHTML = "password is required";
+                // pswdside.style.color = "red";
+            }
+            else if (password.length < 8) {
+                status = false;
+                pswdside.innerHTML = "password must be at least 8 letter long.";
+                // pswdside.style.color = "red";
+            }
+            else if (!checkForSpecificLetter(password, 'A', 'Z')) {
+                status = false;
+                pswdside.innerHTML = "password must have 1 uppercase letter";
+                // pswdside.style.color = "red";
+            }
+            else if (!checkForSpecificLetter(password, '0', '9')) {
+                status = false;
+                pswdside.innerHTML = "password must have 1 digit";
+                // pswdside.style.color = "red";
+            }
+            else if (!checkForSpecialSymbol(password)) {
+                status = false;
+                pswdside.innerHTML = "password must have 1 special symbol($,#,@)";
+                // pswdside.style.color = "red";
+            }
+            else
+                pswdside.innerHTML = "";
+            return status;
+        }
+
+    </script>
+</body>
+
+</html>

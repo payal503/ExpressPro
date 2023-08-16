@@ -1,0 +1,97 @@
+<div class="">
+    <div class="header_section_top ">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="custom_menu" style="margin-left: 2px;">
+                    <ul>
+
+                        <% let userName=currentUser ? currentUser.userName : "" %>
+                            <% let email=currentUser ? currentUser.email : "" %>
+                                <li><a><i class="fa fa-user-circle" aria-hidden="true">
+                                            <%=userName%>
+                                        </i></a>
+                                </li>
+                                <li><a><i class="fa fa-envelope" aria-hidden="true">
+                                            <%=email%>
+                                        </i></a></li>
+
+                    </ul>
+                    <ul style="margin-left: 22vw;">
+                        <li><a href="/"><i class="fa fa-home" aria-hidden="true">Home</i></a></li>
+                        <%if(currentUser){%>
+                            <li><a href="/order/history"><i class="fa fa-history"
+                                        aria-hidden="true">Order-History</i></a></li>
+                            <li><a href="/product/all"><i class="fa fa-product-hunt" aria-hidden="true">Products</i></a>
+                            </li>
+                            <li><a href="/signout"><i class="fa fa-sign-out" aria-hidden="true">SignOut</i></a></li>
+                            <%}else{%>
+                                <li><a href="/signin"><i class="fa fa-sign-in" aria-hidden="true">SignIn</i></a></li>
+                                <li><a href="/signUp"><i class="fa fa-user" aria-hidden="true">SignUp</i></a></li>
+                                <%}%>
+                                    <li><a href="/cart/view-cart">
+                                            <span class="padding_10"> <i class="fa fa-shopping-cart fa-lg"
+                                                    aria-hidden="true"></i>Cart</span></a>
+                                    </li>
+
+                                    <div class="main col-lg-2">
+                                        <!-- Another variation with a button -->
+                                        <div class="input-group">
+                                            <input onkeyup="searchProduct(this.value)" type="text"
+                                                placeholder="Search this blog">
+                                            <div class="input-group-append">
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- ---------------- -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function searchProduct(keyword) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/product/product-search/" + keyword, true);
+        xhttp.send();
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4) {
+                let data = xhttp.responseText;
+                data = JSON.parse(data);
+                console.log(data);
+                let productView = "";
+                for (let product of data.productList) {
+
+                    let priceString = '';
+                    if (product.discountPercentage) {
+                        priceString = ' <del class="text-danger">' + product.price + '</del>' +
+                            '<span class="text-success">' + Math.round(product.price - ((product.price * product.discountPercentage) / 100)) + ' Rs.</span>';
+
+                    }
+                    else {
+                        priceString = '<span class="text-success">' + product.price + ' Rs.</span>'
+                    }
+                    productView = productView + '<div style="height: 450px;" class="col-md-3 p-3">' +
+                        '<div style=" box-shadow: 5px 5px 5px;">' +
+                        '<img src="' + product.thumbnail + '" style="width:100%; height: 200px;"/>' +
+                        '<h3 class="text-center mt-2">' + product.title.substring(0, 20) + '</h3>' +
+                        '<p class="text-center" style="font-size: 20px;">' +
+                        'Price :' + priceString +
+                        '</p>' +
+                        '<h3 style="cursor:pointer;" class="text-center mt-2 mb-3 text-primary">View description</h3>' +
+                        '<div class="text-center">' +
+
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+                document.getElementById("product-display").innerHTML = productView;
+            }
+        }
+    }
+</script>

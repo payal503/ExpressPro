@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Order History</title>
+</head>
+
+<body>
+    <div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+        <div class="col-md-7 col" style="box-shadow: 3px 5px 5px 3px;margin-left: 5vw;margin-bottom: 5vh;width:80vw;">
+
+
+            <table class="table table-inverse table-responsive table-hover ">
+                <tbody>
+                    <%orderHistory.map((item,index)=>{%>
+
+                        <tr>
+                            <td>
+                                <%=item.date%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <%=item.userName%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Supplier : E-Shop</td>
+                        </tr>
+                </tbody>
+            </table>
+            <div>
+                <div>
+                    <img src="<%=item.thumbnail%>" style="width: 20vh;height: 20vh;" alt="">
+                </div>
+                <%=item.description%>
+            </div>
+
+
+
+            <%})%>
+
+
+        </div>
+
+
+</body>
+
+</html>
+
+<table class="table table-inverse table-responsive table-hover ">
+    <tbody>
+
+        <div style="border:2px solid gray;">
+            <tr>
+                <td>
+                    <%=item.date%>
+                </td>
+            </tr>
+        </div>
+        <hr>
+        <tr>
+            <td>
+                <%=item.userName%>
+            </td>
+        </tr>
+        <tr>
+            <td>Supplier : E-Shop</td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td> <img src="<%=item.thumbnail%>" style="width: 20vh;height: 20vh;" alt=""></td>
+            <td>
+                <%=item.description%>
+            </td>
+        </tr>
+        <div>
+        </div>
+    </tbody>
+</table>
+iv>
+
+<div class="row ${1| ,row-cols-2,row-cols-3, auto,justify-content-md-center,|}">
+    <div>
+        <h1 style="text-align: center;">My Order</h1>
+    </div>
+
+    <div class="col-md-7 col"
+        style="box-shadow: 3px 5px 5px 3px;margin-bottom: 5vh;width:60vw;margin-left: 250px; height: auto;">
+
+        <%orderHistory.map((item,index)=>{%>
+            <div>
+                <h3>
+                    <%=item.date%>
+                </h3>
+                <h3>
+                    Order Id : <%=item.id%>
+                </h3>
+            </div>
+            <div style=" height: 40vh;">
+                <div style="width: 27vh;height: 30vh;float: left;box-shadow: 2px 2px 2px;">
+                    <center>
+                        <img src="<%=item.thumbnail%>"
+                            style="width: 23vh;height: 23vh;margin-top: 14px;box-shadow: 3px 3px 3px;" alt="">
+                    </center>
+                </div>
+                <div style="height: 32vh;width:40vw;margin-left: 2px;background-color: gray;float: left;">
+                    <p style="margin-top: 24px;margin-left: 7px;text-align: center;">
+                        <%=item.title%>
+                    </p>
+                    <p style="margin-top: 24px;margin-left: 7px;text-align: center;">
+                        <%=item.brand%>
+                    </p>
+                    <p style="margin-top: 24px;margin-left: 7px;text-align: center;">
+                        <%=item.description%>
+                    </p>
+
+                    <h3 style="text-align: center;">Supplier : E-shop</h3>
+
+                </div>
+                <div>
+                    <button class="btn btn-outline"
+                        style="width: 60%;margin-left: 200px;color: white;background-color: rgb(37, 36, 36);">Add
+                        Your
+                        feedback</button>
+                </div>
+
+            </div>
+            <hr style="border:3px solid black">
+
+            <%})%>
+
+    </div>
+</div>
+<!-- ----------------------------------------------------- -->
+<!-- logo section start -->
+<div class="logo_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- logo section end -->
+<!-- logo section end -->
+<!-- header section start -->
+<div class="header_section">
+    <div class="container">
+        <div class="containt_main">
+            <div class="dropdown">
+                <select>
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All
+                        Category
+                    </button>
+                    <option>
+                        All Category
+                    </option>
+                    <%categoryList.map((category,index)=>{%>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <option>
+                                <%=category.categoryName%>
+                            </option>
+                        </div>
+                        <%})%>
+                </select>
+            </div>
+
+
+            <div class="main">
+                <!-- Another variation with a button -->
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search this blog">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button"
+                            style="background-color: #f26522; border-color:#f26522 ">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="header_box">
+                <div class="lang_box ">
+                    <a href="#" title="Language" class="nav-link" data-toggle="dropdown" aria-expanded="true">
+                        <img src="images/flag-uk.png" alt="flag" class="mr-2 " title="United Kingdom"> English <i
+                            class="fa fa-angle-down ml-2" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu ">
+                        <a href="#" class="dropdown-item">
+                            <img src="images/flag-france.png" class="mr-2" alt="flag">
+                            French
+                        </a>
+                    </div>
+                </div>
+                <!-- <div class="login_menu"> -->
+                <!-- <ul> -->
+
+                <!-- <li><a href="#"> -->
+                <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+                <!-- <span class="padding_10">Cart</span></a> -->
+                <!-- </li> -->
+                <!-- </ul> -->
+
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- =============================================================== -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>Eflyer</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- bootstrap css -->
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<!-- style css -->
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<!-- Responsive-->
+<link rel="stylesheet" href="/css/responsive.css">
+<!-- fevicon -->
+<link rel="icon" href="images/fevicon.png" type="image/gif" />
+<!-- Scrollbar Custom CSS -->
+<link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css">
+<!-- Tweaks for older IEs-->
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<!-- fonts -->
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+<!-- font awesome -->
+<link rel="stylesheet" type="text/css"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--  -->
+<!-- owl stylesheets -->
+<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext"
+    rel="stylesheet">
+<link rel="stylesheet" href="/css/owl.carousel.min.css">
+<link rel="stylesoeet" href="/css/owl.theme.default.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+    media="screen">
+
+<!-----------------------------  -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+    integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+    integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+    crossorigin="anonymous"></script>
+    
+    <li><a href="/"><i class="fa fa-home" aria-hidden="true">Home</i></a></li>
+    <li><a href="/order/order-history"><i class="fa fa-history"
+                aria-hidden="true">Order-History</i></a></li>
+    <%if(currentUser){%>
+        <li><a href="/signout"><i class="fa fa-sign-out" aria-hidden="true">SignOut</i></a></li>
+        <%}else{%>
+            <li><a href="/signin"><i class="fa fa-sign-in" aria-hidden="true">SignIn</i></a></li>
+            <li><a href="/signUp"><i class="fa fa-user" aria-hidden="true">SignUp</i></a></li>
+            <%}%>

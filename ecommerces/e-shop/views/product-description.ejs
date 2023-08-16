@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+    <%- include('_externallink.ejs')%>
+        <style>
+            .bigImage {
+                width: 100%;
+                height: 400px;
+                background-image: url('<%=product.thumbnail%>');
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+
+            .slideshow-items {
+                width: 500px;
+            }
+
+            .slideshow-thumbnails {
+                width: 100px;
+            }
+
+            #slideshow-items-container {
+                display: inline-block;
+                position: relative;
+            }
+
+            #lens {
+                background-color: rgba(233, 233, 233, 0.4)
+            }
+
+            #lens,
+            #result {
+                position: absolute;
+                display: none;
+                z-index: 1;
+            }
+
+            .slideshow-items {
+                display: none;
+            }
+
+            .slideshow-items.active {
+                display: block;
+            }
+
+            .slideshow-thumbnails {
+                opacity: 0.5;
+            }
+
+            .slideshow-thumbnails.active {
+                opacity: 1;
+            }
+
+            #lens,
+            .slideshow-items,
+            .slideshow-thumbnails,
+            #result {
+                border: solid var(--light-grey-2) 1px;
+            }
+        </style>
+        <script>
+            function changeImage(currentImageObject) {
+                var mainImage = document.getElementById("mainImage");
+                var temp = mainImage.src;
+                mainImage.src = currentImageObject.src;
+                currentImageObject.src = temp;
+            }
+
+
+            $(document).ready(function () {
+
+                $('.slideshow-thumbnails').hover(function () { changeSlide($(this)); });
+
+                $(document).mousemove(function (e) {
+                    var x = e.clientX; var y = e.clientY;
+
+                    var x = e.clientX; var y = e.clientY;
+
+                    var imgx1 = $('.slideshow-items.active').offset().left;
+                    var imgx2 = $('.slideshow-items.active').outerWidth() + imgx1;
+                    var imgy1 = $('.slideshow-items.active').offset().top;
+                    var imgy2 = $('.slideshow-items.active').outerHeight() + imgy1;
+
+                    if (x > imgx1 && x < imgx2 && y > imgy1 && y < imgy2) {
+                        $('#lens').show(); $('#result').show();
+                        imageZoom($('.slideshow-items.active'), $('#result'), $('#lens'));
+                    } else {
+                        $('#lens').hide(); $('#result').hide();
+                    }
+
+                });
+
+            });
+
+            function imageZoom(img, result, lens) {
+
+                result.width(img.innerWidth()); result.height(img.innerHeight());
+                lens.width(img.innerWidth() / 2); lens.height(img.innerHeight() / 2);
+
+                result.offset({ top: img.offset().top, left: img.offset().left + img.outerWidth() + 10 });
+
+                var cx = img.innerWidth() / lens.innerWidth(); var cy = img.innerHeight() / lens.innerHeight();
+
+                result.css('backgroundImage', 'url(' + img.attr('src') + ')');
+                result.css('backgroundSize', img.width() * cx + 'px ' + img.height() * cy + 'px');
+
+                lens.mousemove(function (e) { moveLens(e); });
+                img.mousemove(function (e) { moveLens(e); });
+                lens.on('touchmove', function () { moveLens(); })
+                img.on('touchmove', function () { moveLens(); })
+
+                function moveLens(e) {
+                    var x = e.clientX - lens.outerWidth() / 2;
+                    var y = e.clientY - lens.outerHeight() / 2;
+                    if (x > img.outerWidth() + img.offset().left - lens.outerWidth()) { x = img.outerWidth() + img.offset().left - lens.outerWidth(); }
+                    if (x < img.offset().left) { x = img.offset().left; }
+                    if (y > img.outerHeight() + img.offset().top - lens.outerHeight()) { y = img.outerHeight() + img.offset().top - lens.outerHeight(); }
+                    if (y < img.offset().top) { y = img.offset().top; }
+                    lens.offset({ top: y, left: x });
+                    result.css('backgroundPosition', '-' + (x - img.offset().left) * cx + 'px -' + (y - img.offset().top) * cy + 'px');
+                }
+            }
+
+
+            function changeSlide(elm) {
+                $('.slideshow-items').removeClass('active');
+                $('.slideshow-items').eq(elm.index()).addClass('active');
+                $('.slideshow-thumbnails').removeClass('active');
+                $('.slideshow-thumbnails').eq(elm.index()).addClass('active');
+            }
+
+
+        </script>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <%- include('_siderbar.ejs')%>
+            <!-- End of Sidebar -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Topbar -->
+                    <%- include('_topbar.ejs')%>
+                        <!-- End of Topbar -->
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                            <!-- Page Heading -->
+                            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                <h1 class="h3 mb-0 text-gray-800">Product Description</h1>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="mb-4">
+                                            <div id="lens"></div>
+                                            <img id="mainImage" class="bigImage slideshow-items active"
+                                                src="<%=product.thumbnail%>" style="border-radius: 20%;" />
+                                            <div id="result"></div>
+                                        </div>
+                                        <% let allImages=product.imageArray.trim().split(" ");
+                                  for(let image of allImages){%>
+                                    <img onClick=" changeImage(this)" src="<%=image%>" width="80px" height="100px"
+                                            class="ml-2 mb-2"
+                                            style="box-shadow: 5px 5px 5px black; border-radius: 70%;" />
+                                        <%} %>
+                                    </div>
+                                    <div class="col-md-4 offset-1">
+                                        <h1
+                                            style="color: blue;text-shadow: 3px 5px 5px black;font-family:'Times New Roman', Times, serif ;">
+                                            <%=product.title%>
+                                        </h1>
+                                        <h4>Price : <%=product.price%> Rs.</h4>
+                                        <h3>Brand : <%=product.brand%>
+                                        </h3>
+                                        <h3>Category: <%=product.category%>
+                                        </h3>
+                                        <h3>rating : <%=product.rating%> / 5</h3>
+                                        <h5>
+                                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>           
+                                        </h5>
+                                        <p>
+                                            <%=product.description%>
+                                        </p>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.container-fluid -->
+
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Your Website 2021</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

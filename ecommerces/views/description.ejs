@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard</title>
+    <%- include('__externallink.ejs')%>
+        <style>
+            .bigImage {
+                width: 100%;
+                height: 350px;
+                background-image: url('<%=product.thumbnail%>');
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+
+            .slideshow-items {
+                width: 500px;
+            }
+
+            .slideshow-thumbnails {
+                width: 100px;
+            }
+
+            #slideshow-items-container {
+                display: inline-block;
+                position: relative;
+            }
+
+            #lens {
+                background-color: rgba(233, 233, 233, 0.4)
+            }
+
+            #lens,
+            #result {
+                position: absolute;
+                display: none;
+                z-index: 1;
+            }
+
+            .slideshow-items {
+                display: none;
+            }
+
+            .slideshow-items.active {
+                display: block;
+            }
+
+            .slideshow-thumbnails {
+                opacity: 0.5;
+            }
+
+            .slideshow-thumbnails.active {
+                opacity: 1;
+            }
+
+            #lens,
+            .slideshow-items,
+            .slideshow-thumbnails,
+            #result {
+                border: solid var(--light-grey-2) 1px;
+            }
+        </style>
+        <script>
+            function changeImage(currentImageObject) {
+                var mainImage = document.getElementById("mainImage");
+                var temp = mainImage.src;
+                mainImage.src = currentImageObject.src;
+                currentImageObject.src = temp;
+            }
+
+            $(document).ready(function () {
+
+                $('.slideshow-thumbnails').hover(function () { changeSlide($(this)); });
+
+                $(document).mousemove(function (e) {
+                    var x = e.clientX; var y = e.clientY;
+
+                    var x = e.clientX; var y = e.clientY;
+
+                    var imgx1 = $('.slideshow-items.active').offset().left;
+                    var imgx2 = $('.slideshow-items.active').outerWidth() + imgx1;
+                    var imgy1 = $('.slideshow-items.active').offset().top;
+                    var imgy2 = $('.slideshow-items.active').outerHeight() + imgy1;
+
+                    if (x > imgx1 && x < imgx2 && y > imgy1 && y < imgy2) {
+                        $('#lens').show(); $('#result').show();
+                        imageZoom($('.slideshow-items.active'), $('#result'), $('#lens'));
+                    } else {
+                        $('#lens').hide(); $('#result').hide();
+                    }
+
+                });
+
+            });
+
+            function imageZoom(img, result, lens) {
+
+                result.width(img.innerWidth()); result.height(img.innerHeight());
+                lens.width(img.innerWidth() / 2); lens.height(img.innerHeight() / 2);
+
+                result.offset({ top: img.offset().top, left: img.offset().left + img.outerWidth() + 10 });
+
+                var cx = img.innerWidth() / lens.innerWidth(); var cy = img.innerHeight() / lens.innerHeight();
+
+                result.css('backgroundImage', 'url(' + img.attr('src') + ')');
+                result.css('backgroundSize', img.width() * cx + 'px ' + img.height() * cy + 'px');
+
+                lens.mousemove(function (e) { moveLens(e); });
+                img.mousemove(function (e) { moveLens(e); });
+                lens.on('touchmove', function () { moveLens(); })
+                img.on('touchmove', function () { moveLens(); })
+
+                function moveLens(e) {
+                    var x = e.clientX - lens.outerWidth() / 2;
+                    var y = e.clientY - lens.outerHeight() / 2;
+                    if (x > img.outerWidth() + img.offset().left - lens.outerWidth()) { x = img.outerWidth() + img.offset().left - lens.outerWidth(); }
+                    if (x < img.offset().left) { x = img.offset().left; }
+                    if (y > img.outerHeight() + img.offset().top - lens.outerHeight()) { y = img.outerHeight() + img.offset().top - lens.outerHeight(); }
+                    if (y < img.offset().top) { y = img.offset().top; }
+                    lens.offset({ top: y, left: x });
+                    result.css('backgroundPosition', '-' + (x - img.offset().left) * cx + 'px -' + (y - img.offset().top) * cy + 'px');
+                }
+            }
+
+
+            function changeSlide(elm) {
+                $('.slideshow-items').removeClass('active');
+                $('.slideshow-items').eq(elm.index()).addClass('active');
+                $('.slideshow-thumbnails').removeClass('active');
+                $('.slideshow-thumbnails').eq(elm.index()).addClass('active');
+            }
+
+
+
+        </script>
+</head>
+
+<body id="page-top">
+    <%- include('__header1.ejs')%>
+        <div class="container"
+            style="background-color:#ffff;width: 85%;margin-left: 8vw;margin-top: 5vh;margin-bottom: 5vh;box-shadow: 2px 2px 2px;height: 90vh;">
+            <!-- Page Heading -->
+            <div class="align-items-center justify-content-between">
+                <h1 class="text-gray-800" style="text-size-adjust:initial;">Product Description</h1>
+            </div>
+            <hr style="border: 3px solid goldenrod;">
+            <div class="container" id='slideshow-items-container' style="margin-left: 5vw;margin-top: 3vh;width: 70vw;">
+                <div class="row">
+                    <div class="col-md-6" style="width:40vw;float:left;background-color: #f9efef">
+                        <div class="mb-4">
+                            <div id="lens"></div>
+                            <img id="mainImage" class="bigImage slideshow-items active img-fluid img"
+                                src="<%=product.thumbnail%>" onclick="magnify(mainImage, 3)"
+                                style="border-radius: 7%;" />
+                            <div id='result'></div>
+                        </div>
+                        <% let allImages=product.imageArray.trim().split(" ");
+                                  for(let image of allImages){%>
+                                    <img onClick=" changeImage(this)" src="<%=image%>" class=" mb-2"
+                            style="box-shadow: 5px 5px 5px black;margin-left: 2vh;width: 12%;height: 12%;" />
+                        <%} %>
+                    </div>
+                    <div class="col-md-4" style="width: 20vw;float: left; margin-left: 5vw;">
+                        <h1
+                            style="color: blue;text-shadow: 3px 5px 5px black;font-family:'Times New Roman', Times, serif ;">
+                            <%=product.title%>
+                        </h1>
+                        <h4>Price : <%=product.price%> Rs.</h4>
+                        <h3>Brand : <%=product.brand%>
+                        </h3>
+                        <h3>Category: <%=product.category%>
+                        </h3>
+                        <h3>rating : <%=product.rating%> / 5</h3>
+                        <h5>
+                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                            <i class="fa fa-star" aria-hidden="true" style="color: goldenrod;"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>           
+                        </h5>
+                        <p>
+                            <%=product.description%>
+                        </p>
+
+                        <a href="#"><button type="submit" class="btn-warning btn-outline btn-lg">Buy
+                                Now <i class="fa fa-archive" aria-hidden="true"></i></button></a>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <%- include('__footer.ejs')%>
+            <% - include('__externalscriptlink.ejs') %>
+                <!-- Scroll to Top Button-->
+
+</body>
+
+</html>

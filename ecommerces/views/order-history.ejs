@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Order History</title>
+    <%- include('__externallink.ejs')%>
+        <% - include('__externalscriptlink.ejs') %>
+</head>
+
+<body>
+    <%- include('__header1.ejs')%>
+
+        <div class="container">
+            <div style="text-align: center;box-shadow: 2px 2px 2px 4px;width:60%;margin-left: 16vw;margin-bottom: 3vh;">
+                <h1>Order-History</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <%orderHistory1.map((item,index)=>{%>
+                        <div class="card card-2">
+                            <div class="card-body">
+
+                                <div class="media">
+
+                                    <div class="sq align-self-center "> <img
+                                            class="img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
+                                            src="<%=item.thumbnail%>" width="135" height="135" /> </div>
+                                    <div class="media-body my-auto text-right">
+                                        <div class="row  my-auto flex-column flex-md-row">
+                                            <div class="col" style="text-align: center;">
+                                                <%=item.description%>
+                                            </div>
+                                            <div class="col-md-2">Qty :
+                                                <%=item.qty%>
+                                            </div>
+                                            <div class="col my-auto">
+                                                <h6 class="mb-0">
+                                                    Total BillAmount : <%=item.billAmount%>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="my-3 ">
+                                <div class="row">
+                                    <div class="col-lg-3 ">
+                                        <h6 class="mb-0">
+                                            Title : <%=item.title%>
+                                        </h6>
+                                    </div>
+                                    <div class="col-auto my-auto">
+                                        Brand : <%=item.brand%>
+                                    </div>
+                                    <div class="col mt-auto offset-2">
+                                        <div>Order Placed Date : <%=item.date%>
+                                        </div>
+                                        <div>OrderID : <%=item.id%>
+                                        </div>
+                                        <div>
+                                            <a href="/product/view/<%=item.userName%>"><button type="submit"
+                                                    class="btn-warning btn-outline btn-sm">Buy
+                                                    Again <i class="fa fa-archive" aria-hidden="true"></i></button></a>
+                                            <button type="submit"
+                                                class="btn-warning btn-outline btn-sm">feedback</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>Address :
+                                        </div>
+                                        <div>
+                                            <%=item.deliveryAddress%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <%})%>
+                </div>
+
+            </div>
+        </div>
+
+
+</body>
+
+</html>
